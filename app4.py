@@ -2,9 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-## this script takes the images and albums links and ordenate it on a table with checkboxes
+# Read names from list.txt
+with open('namestable4.txt', 'r', encoding='utf-8') as f:
+    names = [line.strip() for line in f]
+
 # Replace with the URL you want to scrape
-url = "https://huiliyuan.x.yupoo.com/albums?page=3"
+url = "https://huiliyuan.x.yupoo.com/albums"
 
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -15,9 +18,6 @@ parent_div = soup.find('div', class_='showindex__parent')
 # Find all child divs within the parent div
 child_divs = parent_div.find_all('div', class_='showindex__children')
 
-# Initialize counters
-album_count = 0
-photo_count = 0
 base_url = "https://huiliyuan.x.yupoo.com/"
 
 # Initialize lists to store the links
@@ -46,13 +46,24 @@ for div in child_divs:
         data_src = f'<a href="http://{data_src}" target="_blank">http://{data_src}</a>'
         photo_links.append(data_src)
 
+# Ensure there are enough names for the albums
+assert len(names) >= len(album_links), "Not enough names in list.txt for the number of albums"
+
 # Create a DataFrame
 df = pd.DataFrame({
     'Check 1': ['<input type="checkbox">' for _ in range(len(album_links))],
     'Check 2': ['<input type="checkbox">' for _ in range(len(album_links))],
+    'Name': names[:len(album_links)],  # Add names from list.txt
     'Album Links': album_links,
     'Photo Links': photo_links
-}, index=range(241, len(album_links) + 241))
+})
+
+
+# Reset the DataFrame's index to start from 121
+df.index = range(1, len(df) + 1)
+
+# Create a new column 'Image Links'
+df['Image Links'] = ['https://mdsport01.com/page/img/' + str(i) + '.jpg' for i in df.index]
 
 # Convert the DataFrame to an HTML string
 html = df.to_html(escape=False)
@@ -84,5 +95,5 @@ html = html.replace('<table border="1" class="dataframe">',
                     ''')
 
 # Write the HTML string to a file
-with open('huilyian3.html', 'w') as f:
+with open('3.html', 'w') as f:
     f.write(html)

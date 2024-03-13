@@ -6,10 +6,10 @@ import time
 time.sleep(2)
 
 # Iterate over the tabs
-for i in range(28):
+for i in range(10):
     # Use hotkey to switch to the next tab
     pyautogui.hotkey('ctrl', 'tab')
-    time.sleep(0.5)  # wait for the tab to load
+    time.sleep(1)  # wait for the tab to load
 
     # Move the mouse to the center of the screen (you may need to adjust the coordinates based on your screen resolution)
     pyautogui.moveTo(960, 540)  # for a 1920x1080 screen
@@ -22,11 +22,11 @@ for i in range(28):
     # Select 'Save As' (you may need to adjust the coordinates based on your screen resolution and the position of the 'Save As' option in the context menu)
     pyautogui.moveTo(1000, 600)  # for a 1920x1080 screen
     pyautogui.click()
-    time.sleep(0.5)  # wait for the 'Save As' dialog to appear
+    time.sleep(1)  # wait for the 'Save As' dialog to appear
 
     # Type the name of the file (the index of the tab + 1)
-    pyautogui.write(str(i + 241))
-    time.sleep(0.5)
+    pyautogui.write(str(i + 1))
+    time.sleep(1.5)
 
     # Press 'Enter' to save the file
     pyautogui.press('enter')
